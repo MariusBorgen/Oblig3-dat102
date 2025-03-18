@@ -30,63 +30,150 @@ import java.util.NoSuchElementException;
 		@Override
 		public boolean inneholder(T element) {
 			
-			
+		Node<T>aktuell = hode;
+		while(aktuell !=null) {
+			if(aktuell.data.equals(element)) {
+				return true;
+			}
+			aktuell = aktuell.neste;
+		}
+			return false;
 		
 		}
 		@Override
 		public boolean erDelmengdeAv(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return false;
+			Node<T>aktuell = hode;
+			while(aktuell != null) { 
+				if(!annenMengde.inneholder(aktuell.data)) {
+					return false;
+				}
+			aktuell = aktuell.neste;
+			}
+		return true;
 		}
+		
 		@Override
 		public boolean erLik(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return false;
+			if (antall !=annenMengde.antallElementer()) {
+				return false;
+			}
+			return erDelmengdeAv(annenMengde);
 		}
+		
 		@Override
 		public boolean erDisjunkt(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return false;
+			Node<T>aktuell = hode;
+			while(aktuell !=null) {
+				if (annenMengde.inneholder(aktuell.data)) {
+					return false;
+				}
+				aktuell = aktuell.neste;
+			}
+			return true;
+
+
 		}
 		@Override
 		public MengdeADT<T> snitt(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return null;
+			LenketMengde<T> resultat = new LenketMengde<>();
+			Node<T>aktuell = hode;
+			while (aktuell !=null) {
+				if (annenMengde.inneholder(aktuell.data)) {
+					resultat.leggTil(aktuell.data);
+				}
+				aktuell = aktuell.neste;
+			}
+			return resultat;
+			
 		}
 		@Override
 		public MengdeADT<T> union(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return null;
+			LenketMengde<T> resultat = new LenketMengde<>();
+			Node<T>aktuell = hode;
+			while (aktuell !=null) {
+				resultat.leggTil(aktuell.data);
+				aktuell = aktuell.neste;
+			}
+			T[] endreElementer = annenMengde.tilTabell();
+			for(T element : endreElementer) {
+				resultat.leggTil(element);
+			}
+			return resultat;
+			
 		}
 		@Override
 		public MengdeADT<T> minus(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			return null;
+			LenketMengde<T> resultat = new LenketMengde<>();
+			Node<T>aktuell = hode;
+			while(aktuell != null) {
+				if(!annenMengde.inneholder(aktuell.data)) {
+					resultat.leggTil(aktuell.data);
+				}
+				aktuell = aktuell.neste;
+				
+			}
+			return resultat;
+		
 		}
 		@Override
 		public void leggTil(T element) {
-			// TODO Auto-generated method stub
+			if(!inneholder(element)) {
+				Node<T> nyNode = new Node<>(element);
+				nyNode.neste = hode;
+				hode = nyNode;
+				antall++;
+			}
 			
 		}
 		@Override
 		public void leggTilAlleFra(MengdeADT<T> annenMengde) {
-			// TODO Auto-generated method stub
-			
+			T[] endreElement =  annenMengde.tilTabell();
+			for (T element : endreElement) {
+				leggTil(element);
+			}
 		}
 		@Override
 		public T fjern(T element) {
-			// TODO Auto-generated method stub
+		if (erTom()) {
+			throw new NoSuchElementException("Denne megnde er tom");
+		}
+		Node<T> forrige = null;
+		Node<T> aktuell = hode;
+		while (aktuell != null && !aktuell.data.equals(element)) {
+			forrige = aktuell;
+			aktuell = aktuell.neste;
+		}
+		if (aktuell.equals(null)) {
 			return null;
 		}
+		if (forrige.equals(null)) {
+			hode = aktuell.neste;
+		} else {
+			forrige = aktuell.neste;
+		} 
+		antall--;
+		return aktuell.data;
+		}
+		
+			
+		
 		@Override
 		public T[] tilTabell() {
-			// TODO Auto-generated method stub
-			return null;
+			@SuppressWarnings("Ikke sjekket")
+			T[] tabell = (T[]) new Object[antall];
+			Node<T> aktuell = hode;
+			int indeks = 0;
+			while (aktuell != null) {
+				tabell[indeks++] = aktuell.data;
+				aktuell = aktuell.neste;
+			}
+			return tabell;
+			
+		
 		}
 		@Override
 		public int antallElementer() {
-			// TODO Auto-generated method stub
-			return 0;
+			return antall;
 		}
 	}
 	
