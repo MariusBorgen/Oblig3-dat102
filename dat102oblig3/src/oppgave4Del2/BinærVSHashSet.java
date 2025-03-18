@@ -8,7 +8,7 @@ public class BinærVSHashSet {
 
     static int antallElementer = 100_000;
     static int maxVerdi = 1_000_000;
-    static int søkeAntall = 10_000;
+    static int søkeAntall = 100_000;
 
     static Random random = new Random();
 
@@ -31,6 +31,15 @@ public class BinærVSHashSet {
 
 
         long tidBinarySearch = målTid(() -> søkIBinarySearch(tab, søketall));
+        
+        System.out.println();
+        
+        if (tidBinarySearch > tidHashSet) {
+            System.out.println("HashSet-søk var " + ((double) tidBinarySearch / tidHashSet) + " ganger raskere.");
+        } else {
+            System.out.println("Binærsøk var " + ((double) tidHashSet / tidBinarySearch) + " ganger raskere.");
+        }
+
 
 
         System.out.println("\nTid for søk i HashSet: " + tidHashSet + " ms");
@@ -55,7 +64,8 @@ public class BinærVSHashSet {
     }
 
     private static int søkIHashSet(HashSet<Integer> hashSet, int[] søketall) {
-        int funnet = 0;
+        
+    	int funnet = 0;
         for (int søk : søketall) {
             if (hashSet.contains(søk)) {
                 funnet++;
@@ -77,8 +87,17 @@ public class BinærVSHashSet {
     }
 
     private static long målTid(Runnable metode) {
-        long start = System.nanoTime();
-        metode.run();
-        return (System.nanoTime() - start) / 1_000_000; // Konverter til ms
+        int antallTester = 2; // Her kan du velge hvor mange tester du ønsker å gjennomføre
+        long totalTid = 0;
+
+        for (int i = 0; i < antallTester; i++) {
+            long start = System.nanoTime();
+            metode.run();
+            totalTid += (System.nanoTime() - start);
+        }
+
+        return (totalTid / antallTester) / 1_000_000;
+        
     }
+
 }
