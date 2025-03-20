@@ -1,10 +1,6 @@
 package dat102.uke10.oppg4_mengder;
 
-import dat102.uke10.oppg4_mengder.MengdeADT;
-
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -38,8 +34,9 @@ public class JavaSetToMengde <T> implements MengdeADT<T>{
 	}
 	
 	public T[] tilTabell() {
-		return mengde.toArray((T[]) new Object[0]);
+	    return mengde.toArray((T[]) new Object[mengde.size()]);
 	}
+
 	
 	public int antallElementer() {
 		return mengde.size();
@@ -109,15 +106,24 @@ public class JavaSetToMengde <T> implements MengdeADT<T>{
 
 	@Override
 	public MengdeADT<T> minus(MengdeADT<T> annenMengde) {
-		// TODO Auto-generated method stub
-		return null;
+	    JavaSetToMengde<T> minusMengde = new JavaSetToMengde<>();
+
+	    for (T element : mengde) {
+	        if (!annenMengde.inneholder(element)) {
+	            minusMengde.leggTil(element); 
+	        }
+	    }
+	    return minusMengde; 
 	}
+
 
 	@Override
 	public void leggTilAlleFra(MengdeADT<T> annenMengde) {
-		// TODO Auto-generated method stub
-		
+	    for (T element : annenMengde.tilTabell()) {
+	        this.leggTil(element);  // Bruker eksisterende `leggTil()`-metode
+	    }
 	}
+
 }
 	
 	
